@@ -43,7 +43,7 @@ public class MessageBeanImpl implements MessageBean {
 		String message = greeting+", "+name+"!";
 		System.out.println(message);
 		try {
-			outputter.output(greeting);
+			outputter.output(message);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
