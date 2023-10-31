@@ -1,8 +1,11 @@
 package com.kosta.di.sample2;
 
+import java.io.IOException;
+
 public class MessageBeanImpl implements MessageBean {
 	private String name;
 	private String greeting;
+	private Outputter outputter;
 
 	
 	public String getName() {
@@ -25,9 +28,25 @@ public class MessageBeanImpl implements MessageBean {
 	}
 
 
+	public Outputter getOutputter() {
+		return outputter;
+	}
+
+
+	public void setOutputter(Outputter outputter) {
+		this.outputter = outputter;
+	}
+
+
 	@Override
 	public void sayHello() {
-		System.out.println(greeting+", "+name+"!");
+		String message = greeting+", "+name+"!";
+		System.out.println(message);
+		try {
+			outputter.output(greeting);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
