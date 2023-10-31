@@ -4,9 +4,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	https://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="outputter" class="com.kosta.di.sample2.FileOutputter">
-		<constructor-arg>
+		<constructor-arg index="0">
 			<value>out.txt</value>
 		</constructor-arg>
+
 	</bean>
 	<bean id="messageBean" class="com.kosta.di.sample2.MessageBeanImpl">
 		<property name="name"><value>길동아</value></property>
