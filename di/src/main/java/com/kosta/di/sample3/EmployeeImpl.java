@@ -5,6 +5,10 @@ public class EmployeeImpl implements Employee {
 	private String name;
 	private Department department;
 	
+	public EmployeeImpl() {
+		
+	};
+	
 	public EmployeeImpl(Integer id, String name) {
 		this.id = id;
 		this.name = name;
