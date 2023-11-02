@@ -1,6 +1,6 @@
 package com.kosta.board.dao;
 
-import java.lang.reflect.Member;
+import com.kosta.board.dto.Member;
 
 public interface MemberDao {
    Member selectMember(String id) throws Exception;

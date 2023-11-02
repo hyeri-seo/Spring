@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kosta.board.dao.MemberDao;
-import com.kosta.board.dao.MemberDaoImpl;
 import com.kosta.board.dto.Member;
 
 @Service
@@ -12,10 +11,6 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Autowired
 	private MemberDao memberDao;
-	
-	public MemberServiceImpl() {
-		memberDao = new MemberDaoImpl();
-	}
 
 	@Override
 	public Member login(String id, String password) throws Exception {

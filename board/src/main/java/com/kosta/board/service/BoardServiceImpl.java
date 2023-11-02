@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kosta.board.dao.BoardDao;
 import com.kosta.board.dao.BoardDaoImpl;
@@ -34,7 +35,16 @@ public class BoardServiceImpl implements BoardService {
 		int row = (pageInfo.getCurPage()-1)*10+1;
 		return boardDao.selectBoardList(row-1);
 	}
-//
+
+	@Override
+	public Board writeBoard(Board board, MultipartFile file) throws Exception {
+		if(file!=null && !file.isEmpty()) {
+			String dir = "c:/jsb/upload/";
+			
+		}
+		return null;
+	}
+	
 //	@Override
 //	public Board boardDetail(Integer num) throws Exception {
 //		boardDao.updateBoardViewCount(num);
@@ -87,11 +97,6 @@ public class BoardServiceImpl implements BoardService {
 //		return map;
 //	}
 //
-//	@Override
-//	public void boardWrite(Board board) throws Exception {
-//		boardDao.insertBoard(board);
-//		
-//	}
 //
 //	@Override
 //	public String boardLike(String id, Integer num) throws Exception {

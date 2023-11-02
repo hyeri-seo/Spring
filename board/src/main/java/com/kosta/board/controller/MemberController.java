@@ -33,7 +33,7 @@ public class MemberController {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return "mav";
+		return mav;
 	}
 	
 	@RequestMapping(value="/join", method=RequestMethod.GET)

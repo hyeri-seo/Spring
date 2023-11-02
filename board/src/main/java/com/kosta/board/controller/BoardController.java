@@ -5,9 +5,11 @@ import java.util.Locale;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kosta.board.dto.Board;
@@ -45,6 +47,21 @@ public class BoardController {
 	@RequestMapping(value="/boardwrite", method=RequestMethod.GET)
 	public String boardWrite() {
 		return "writeform";
+	}
+	
+	@RequestMapping(value="/boardwrite", method=RequestMethod.POST)
+	public ModelAndView boardWrite(@ModelAttribute Board board, @RequestParam("file") MultipartFile file) {
+		ModelAndView mav = new ModelAndView();
+		try {
+			Board writeboard = boardService.writeBoard(board, file);
+			mav.addObject("board", writeboard);
+			mav.setViewName("detailform");
+		} catch(Exception e) {
+			e.printStackTrace();
+			mav.addObject("err", "글 등록 오류");
+			mav.setViewName("error");
+		}
+		return mav;
 	}
 
 }

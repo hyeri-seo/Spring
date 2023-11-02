@@ -1,10 +1,10 @@
 package com.kosta.board.dao;
 
-import java.lang.reflect.Member;
-
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.kosta.board.dto.Member;
 
 @Repository
 public class MemberDaoImpl implements MemberDao {
