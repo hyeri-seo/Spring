@@ -76,4 +76,17 @@
 			update board set likecount=likecount-1 where num=#{num}
 		]]>	
 	</update>
+	
+	<insert id="insertFile" parameterType="FileVO" useGeneratedKeys="true" keyProperty="num">
+		<![CDATA[
+			insert into file (directory, name, size, contenttype, uploaddate, data)
+			values(#{directory}, #{name}, #{size}, #{contenttype}, curdate(), #{data})
+		]]>	
+	</insert>
+	
+	<select id="selectFile" parameterType="Integer" resultType="FileVO">
+		<![CDATA[
+			select from file where num=#{num}
+		]]>	
+	</select>
 </mapper>

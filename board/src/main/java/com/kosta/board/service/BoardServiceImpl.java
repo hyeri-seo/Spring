@@ -1,5 +1,6 @@
 package com.kosta.board.service;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kosta.board.dao.BoardDao;
 import com.kosta.board.dao.BoardDaoImpl;
 import com.kosta.board.dto.Board;
+import com.kosta.board.dto.FileVO;
 import com.kosta.board.dto.PageInfo;
 
 @Service
@@ -16,10 +18,6 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	private BoardDao boardDao;
-	
-	public BoardServiceImpl() {
-		boardDao = new BoardDaoImpl();
-	}
 
 	@Override
 	public List<Board> boardListByPage(PageInfo pageInfo) throws Exception {
@@ -40,9 +38,25 @@ public class BoardServiceImpl implements BoardService {
 	public Board writeBoard(Board board, MultipartFile file) throws Exception {
 		if(file!=null && !file.isEmpty()) {
 			String dir = "c:/jsb/upload/";
+			FileVO fileVO = new FileVO();
+			fileVO.setDirectory(dir);
+			fileVO.setName(file.getOriginalFilename());
+			fileVO.setSize(file.getSize());
+			fileVO.setContenttype(file.getContentType());
+			fileVO.setData(file.getBytes());
+			boardDao.insertFile(fileVO);
+			Integer num = fileVO.getNum();
 			
+			//디렉토리에 파일이 바로 저장됨
+			//업로드 할 파일 객체 생성. 데이터는 들어가 있지 않음
+			//새로 생성된 번호로 파일 업로드
+			File uploadFile = new File(dir+num);
+			file.transferTo(uploadFile);
+			board.setFileurl(num+"");
 		}
-		return null;
+		//얘는 보드에 파일 첨부하는 것
+		boardDao.insertBoard(board);
+		return boardDao.selectBoard(board.getNum());
 	}
 	
 //	@Override

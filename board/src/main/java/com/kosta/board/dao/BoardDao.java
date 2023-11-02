@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kosta.board.dto.Board;
+import com.kosta.board.dto.FileVO;
 
 public interface BoardDao {
 	void insertBoard(Board board) throws Exception;
@@ -18,4 +19,6 @@ public interface BoardDao {
 	 Integer selectLikeCount(Integer num) throws Exception;
 	 void plusBoardLikeCount(Integer num) throws Exception;
 	 void minusBoardLikeCount(Integer num) throws Exception;
+	 void insertFile(FileVO fileVO) throws Exception;
+	 FileVO selectFile(Integer num) throws Exception;
 }

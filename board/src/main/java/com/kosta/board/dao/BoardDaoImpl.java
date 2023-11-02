@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kosta.board.dto.Board;
+import com.kosta.board.dto.FileVO;
 
 /**
  * @author KOSTA
@@ -82,6 +83,16 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public void minusBoardLikeCount(Integer num) throws Exception {
 		sqlSession.update("mapper.board.minusBoardLikeCount", num);
+	}
+
+	@Override
+	public void insertFile(FileVO fileVO) throws Exception {
+		sqlSession.insert("mapper.board.insertFile", fileVO);
+	}
+
+	@Override
+	public FileVO selectFile(Integer num) throws Exception {
+		return sqlSession.selectOne("mapper.board.selectFile", num);
 	}
 	
 }

@@ -3,6 +3,7 @@ package com.kosta.board.controller;
 import java.util.List;
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +20,7 @@ import com.kosta.board.service.BoardService;
 @Controller
 public class BoardController {
 	
+	@Autowired
 	private BoardService boardService;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
