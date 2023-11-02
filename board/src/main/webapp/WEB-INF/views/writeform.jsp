@@ -31,6 +31,7 @@ table {
 	<section id="./writeForm">
 		<h2>게시판글등록</h2>
 		<form action="boardWrite" method="post" enctype="multipart/form-data" name="boardform">
+			<input type="hidden" name="writer" value="${user.id }"/>
 			<table>
 				<tr>
 					<td class="td_left"><label for="writer">글쓴이</label></td>

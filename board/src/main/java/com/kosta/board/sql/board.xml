@@ -11,8 +11,7 @@
 	
 	<select id="selectBoardList" parameterType="Integer" resultType="Board">
 		<![CDATA[
-			select * from board order by num desc
-			limit #{row},10
+			select * from board order by num desc limit #{row}, 10
 		]]>
 	</select>
 	

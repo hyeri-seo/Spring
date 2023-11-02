@@ -3,10 +3,13 @@ package com.kosta.board.controller;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,6 +67,15 @@ public class BoardController {
 			mav.setViewName("error");
 		}
 		return mav;
+	}
+	
+	@RequestMapping(value="/image/{num}")
+	public void imageView(@PathVariable Integer num, HttpServletResponse response) {
+		try {
+			boardService.fileView(num, response.getOutputStream());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

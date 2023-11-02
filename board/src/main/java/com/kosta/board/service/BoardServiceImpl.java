@@ -1,14 +1,15 @@
 package com.kosta.board.service;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kosta.board.dao.BoardDao;
-import com.kosta.board.dao.BoardDaoImpl;
 import com.kosta.board.dto.Board;
 import com.kosta.board.dto.FileVO;
 import com.kosta.board.dto.PageInfo;
@@ -57,6 +58,18 @@ public class BoardServiceImpl implements BoardService {
 		//얘는 보드에 파일 첨부하는 것
 		boardDao.insertBoard(board);
 		return boardDao.selectBoard(board.getNum());
+	}
+
+	@Override
+	public void fileView(Integer num, OutputStream out) throws Exception {
+		try {
+			FileVO fileVO = boardDao.selectFile(num);
+			FileCopyUtils.copy(fileVO.getData(), out);
+			out.flush();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 //	@Override
