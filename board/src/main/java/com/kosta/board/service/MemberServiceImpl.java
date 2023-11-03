@@ -23,7 +23,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void join(Member member) throws Exception {
 		Member smember = memberDao.selectMember(member.getId());
-		if(smember!=null) throw new Exception("멤버 중복");
+		if(smember!=null) throw new Exception("아이디 중복");
 		memberDao.insertMember(member);
 	}
 
@@ -32,5 +32,10 @@ public class MemberServiceImpl implements MemberService {
 		Member member = (Member) memberDao.selectMember(id);
 		if(member==null) return "notexist";
 		return "exist";
+	}
+
+	@Override
+	public Member userInfo(String id) throws Exception {
+		return memberDao.selectMember(id);
 	}
 }

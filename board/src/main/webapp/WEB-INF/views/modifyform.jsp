@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"  />
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,12 +27,24 @@ table {
 	text-align: center;
 }
 </style>
+<script>
+	window.onload = function() {
+		const fileDom = document.querySelector('#file');
+		const imageBox = document.querySelector('#image-box');
+		
+		fileDom.addEventListener('change', ()=> {
+			const imageSrc = URL.createObjectURL(fileDom.files[0]);
+			imageBox.src = imageSrc;
+		})
+	}
+</script>
 </head>
 <body>
 	<section id="./writeForm">
 		<h2>게사판글수정</h2>
-		<form action="boardmodify" method="post" enctype="multipart/form-data">
+		<form action="${contextPath}/boardmodify" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="num" value="${board.num}"/>
+		<input type="hidden" name="fileurl" value="${board.fileurl}"/>
 			<table border="1">
 				<tr>
 					<td class="td_left"><label for="writer">글쓴이</label></td>
@@ -50,7 +63,18 @@ table {
 				</tr>
 				<tr>
 					<td class="td_left"><label for="file">이미지 파일 첨부</label></td>
-					<td class="td_right"><input name="file" type="file" id="file" accept="image/*"/></td>
+					<td class="td_right">
+					<c:choose>
+						<c:when test="${board.fileurl eq Empty}">
+							<img src="${contextPath}/resources/img/images.png"  width="100px" height="100px" id="image-box"/>
+						</c:when>
+						<c:otherwise>
+							<img src="${contextPath}/image/${board.fileurl}"  width="100px" height="100px" id="image-box"/>
+						</c:otherwise>
+					</c:choose>
+					<br/>
+					<input name="file" type="file" id="file" accept="image/*"/>
+					</td>
 				</tr>
 			
 			</table>

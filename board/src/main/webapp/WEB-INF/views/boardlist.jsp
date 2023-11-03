@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,7 +41,7 @@ table { margin: auto; width: 800px }
 
 <h3>글 목록 &nbsp;&nbsp;
 <c:if test="${user ne Empty }">
-	<a href="boardwrite">글쓰기</a>
+	<a href="${contextPath}/boardwrite">글쓰기</a>
 </c:if>
 
 </h3>
@@ -63,13 +64,13 @@ table { margin: auto; width: 800px }
 			<c:forEach items="${boardList }" var="board">
 				<tr>
 					<td>${board.num }</td>
-					<td><a href="boarddetail?num=${board.num}">${board.subject }</a></td>
+					<td><a href="${contextPath}/boarddetail/${board.num}">${board.subject }</a></td>
 					<td>${board.writer }</td>
 					<td>${board.writedate  }</td>
 					<td>${board.viewcount  }</td>
 					<td>
 					<c:if test="${user.id == board.writer }">
-						<a href="boarddelete?num=${board.num }&page=${pageInfo.curPage}">삭제</a>
+						<a href="${contextPath}/boarddelete/${board.num }/${pageInfo.curPage}">삭제</a>
 					</c:if>
 					</td>
 				</tr>
@@ -77,8 +78,8 @@ table { margin: auto; width: 800px }
 		</table>
 		<div id="emptyArea">
 			<c:choose>  
-				<c:when test="${res.pageInfo.curPage>1}">
-					<a href="boardlist?page=${res.pageInfo.curPage-1}">&lt;</a>
+				<c:when test="${pageInfo.curPage>1}">
+					<a href="${contextPath}/boardlist?page=${pageInfo.curPage-1}">&lt;</a>
 				</c:when>
 				<c:otherwise>
 					&lt;
@@ -86,13 +87,13 @@ table { margin: auto; width: 800px }
 			</c:choose>
 			&nbsp;&nbsp;
 
-			<c:forEach begin="${res.pageInfo.startPage}" end="${res.pageInfo.endPage}" var="i">
+			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}" var="i">
 				<c:choose>
-					<c:when test="${res.pageInfo.curPage==i}">
-						<a href="boardlist?page=${i}" class="select" onclick="callBtn(${i});return ${res.keyword==null};">${i}</a>&nbsp;
+					<c:when test="${pageInfo.curPage==i}">
+						<a href="${contextPath}/boardlist?page=${i}" class="select" onclick="callBtn(${i});return ${keyword==null};">${i}</a>&nbsp;
 					</c:when>
 					<c:otherwise>
-						<a href="boardlist?page=${i}" class="btn" onclick="callBtn(${i});return ${res.keyword==null};">${i}</a>&nbsp;
+						<a href="${contextPath}/boardlist?page=${i}" class="btn" onclick="callBtn(${i});return ${keyword==null};">${i}</a>&nbsp;
 					</c:otherwise>
 					
 				</c:choose>
@@ -100,8 +101,8 @@ table { margin: auto; width: 800px }
 			</c:forEach>
 
 			<c:choose>  
-				<c:when test="${res.pageInfo.curPage<res.pageInfo.allPage}">
-					<a href="boardlist?page=${res.pageInfo.curPage+1}">&gt;</a>
+				<c:when test="${pageInfo.curPage<pageInfo.allPage}">
+					<a href="${contextPath}/boardlist?page=${pageInfo.curPage+1}">&gt;</a>
 				</c:when>
 				<c:otherwise>
 					&gt;

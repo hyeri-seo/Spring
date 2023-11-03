@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,17 +35,17 @@ table {
 $(function() {
 	$('#heart').click(function() {
 		$.ajax({
-			url:'like',
+			url:'${contextPath}/like',
 			type:'post',
-			dataType: 'json',
 			data:{'num':'<c:out value="${board.num}"/>'},
 			success: function(res) {
-				if(res.select) {
-					$("#heart").attr("src","image?file=redheart.png")
+				if(res==="true") {
+					$("#heart").attr("src","${contextPath}/resources/img/redheart.png")
+					$("#likecount").text(+$("#likecount").text()+1);
 				} else {
-					$("#heart").attr("src","image?file=blackheart.png")
+					$("#heart").attr("src","${contextPath}/resources/img/blackheart.png")
+					$("#likecount").text(+$("#likecount").text()-1);
 				}
-				$("#likecount").text(res.likecount);
 			},
 			error:function(err) {
 				console.log(err);
@@ -80,26 +81,31 @@ $(function() {
 				<tr>
 					<td class="td_left"><label>이미지</label></td>
 					<td>
-					<c:if test="${board.fileurl ne null}">
-					<img src="image?file=${board.fileurl}" width="100px" height="100px"/>
-					</c:if>
+					<c:choose>
+						<c:when test="${board.fileurl ne null}">
+							<img src="${contextPath}/image/${board.fileurl}" width="100px" height="100px"/>
+						</c:when>
+						<c:otherwise>
+							<img src="${contextPath}/resources/img/images.png" width="100px" height="100px"/>
+						</c:otherwise>
+					</c:choose>
 					</td>
 				</tr>
 				
 			</table>
 			<section id="commandCell">
 				<c:if test="${user.id eq board.writer }">
-				<a href="boardmodify?num=${board.num}">수정</a>&nbsp;&nbsp;
+				<a href="${contextPath}/boardmodify/${board.num}">수정</a>&nbsp;&nbsp;
 				</c:if>
-				<a href="boardlist">목록</a>&nbsp;&nbsp;
+				<a href="${contextPath}/boardlist">목록</a>&nbsp;&nbsp;
 				좋아요(<span id="likecount">${board.likecount}</span>)&nbsp;&nbsp;
 				<c:if test="${user ne Empty}">
 					<c:choose>
 						<c:when test="${select == true}">
-							<img id="heart" src="image?file=redheart.png" width="20px" height="20px"/>
+							<img id="heart" src="${contextPath}/resources/img/redheart.png" width="20px" height="20px"/>
 						</c:when>
 						<c:otherwise>
-							<img id="heart" src="image?file=blackheart.png" width="20px" height="20px"/>
+							<img id="heart" src="${contextPath}/resources/img/blackheart.png" width="20px" height="20px"/>
 						</c:otherwise>
 					</c:choose>
 				</c:if>

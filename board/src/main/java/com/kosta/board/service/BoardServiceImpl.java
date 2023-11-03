@@ -1,8 +1,11 @@
 package com.kosta.board.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,8 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<Board> boardListByPage(PageInfo pageInfo) throws Exception {
 		int boardCount = boardDao.selectBoardCount();
+		if(boardCount==0) return null;
+		
 		int allPage = (int)Math.ceil((double)boardCount/10);
 		int startPage = (pageInfo.getCurPage()-1)/10*10+1;
 		int endPage = Math.min(startPage+10-1, allPage);
@@ -64,28 +69,106 @@ public class BoardServiceImpl implements BoardService {
 	public void fileView(Integer num, OutputStream out) throws Exception {
 		try {
 			FileVO fileVO = boardDao.selectFile(num);
-			FileCopyUtils.copy(fileVO.getData(), out);
+//			FileCopyUtils.copy(fileVO.getData(), out);
+			
+			FileInputStream fis = new FileInputStream(fileVO.getDirectory()+num);
+			FileCopyUtils.copy(fis, out);;
+			
 			out.flush();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+	}
+	
+	@Override
+	public Board boardDetail(Integer num) throws Exception {
+//		boardDao.updateBoardViewCount(num);
+		System.out.println(num);
+		return boardDao.selectBoard(num);
+	}
+
+	@Override
+	public Board boardModify(Board board, MultipartFile file) throws Exception {
+		if(file!=null && !file.isEmpty()) {
+			 //1. 파일 정보 DB에 추가
+			String dir = "c:/jsb/upload/";
+			FileVO fileVO = new FileVO();
+			fileVO.setDirectory(dir);
+			fileVO.setName(file.getOriginalFilename());
+			fileVO.setSize(file.getSize());
+			fileVO.setContenttype(file.getContentType());
+			fileVO.setData(file.getBytes());
+			boardDao.insertFile(fileVO);
+			
+			//2. upload 폴더에 파일 업로드
+			File uploadFile = new File(dir+fileVO.getNum());
+			file.transferTo(uploadFile);
+			
+			 //3. 기존 파일번호 삭제 위해 받아놓기
+			Integer deleteFileNum = null;
+			if(board.getFileurl()!=null && !board.getFileurl().trim().equals("")) {
+				deleteFileNum = Integer.parseInt(board.getFileurl());
+			}
+			
+			//4. 파일번호를 board fileUrl에 복사 & board update
+			board.setFileurl(fileVO.getNum()+"");
+			boardDao.updateBoard(board);
+			
+			//5. board fileUrl에 해당하는 파일 번호를 파일 테이블에서 삭제
+			if(deleteFileNum!=null) {
+				boardDao.deleteFile(deleteFileNum);				
+			}
+		} else {
+			boardDao.updateBoard(board);
+		}
+		return boardDao.selectBoard(board.getNum());
+	}
+
+	@Override
+	public void removeBoard(Integer num) throws Exception {
+		Board board = boardDao.selectBoard(num);
+		if(board!=null) {
+			if(board.getFileurl()!=null) {
+				boardDao.deleteFile(Integer.parseInt(board.getFileurl()));				
+			}
+			boardDao.deleteBoard(num);
+		}
+	}
+	
+	@Override
+	public Boolean isBoardLike(String userId, Integer boardNum) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", userId);
+		param.put("num", boardNum);
+		Integer likeNum = boardDao.selectBoardLike(param);
+		return likeNum==null?false:true;
+	}
+
+	@Override
+	public Boolean selectBoardLike(String userId, Integer boardNum) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", userId);
+		param.put("num", boardNum);
+		Integer likeNum = boardDao.selectBoardLike(param);
+		if(likeNum == null) {
+			boardDao.insertBoardLike(param);
+			boardDao.plusBoardLikeCount(boardNum);
+			return true;
+		} else {
+			boardDao.deleteBoardLike(param);
+			boardDao.minusBoardLikeCount(boardNum);
+			return false;
+		}
 	}
 	
 //	@Override
-//	public Board boardDetail(Integer num) throws Exception {
-//		boardDao.updateBoardViewCount(num);
-//		return boardDao.selectBoard(num);
-//	}
-//
-//	@Override
-//	public void boardModify(Board board) throws Exception {
-//		boardDao.updateBoard(board);
-//	}
-//
-//	@Override
-//	public void boardRemove(Integer num) throws Exception {
-//		boardDao.deleteBoard(num);
+//	public Boolean isBoardLike(String id, Integer num) throws Exception {
+//		Map<String,Object> param = new HashMap<>();
+//		param.put("id", id);
+//		param.put("num", num);
+//		Integer likenum = boardDao.selectBoardLike(param);
+//		if(likenum==null) return false;
+//		return true;
 //	}
 //
 //	@Override
@@ -152,14 +235,4 @@ public class BoardServiceImpl implements BoardService {
 //		return jsonObj.toJSONString();
 //	}
 //
-//	@Override
-//	public Boolean isBoardLike(String id, Integer num) throws Exception {
-//		Map<String,Object> param = new HashMap<>();
-//		param.put("id", id);
-//		param.put("num", num);
-//		Integer likenum = boardDao.selectBoardLike(param);
-//		if(likenum==null) return false;
-//		return true;
-//	}
-
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"  />
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,14 +23,14 @@
 <img src="resources/img/logo.png" width="100px" height="100px">&nbsp;
 <c:choose>
 	<c:when test="${user eq Empty}">
-		<a href="login">로그인</a>
+		<a href="${contextPath}/login">로그인</a>
 	</c:when>
 	<c:otherwise>
-		<b>${user.name }</b>&nbsp;&nbsp;<a href="logout">로그아웃</a>
+		<b>${user.name }</b>&nbsp;&nbsp;<a href="${contextPath}/logout">로그아웃</a>
 	</c:otherwise>
 </c:choose>&nbsp;&nbsp;&nbsp;
-<a href="join">회원가입</a>&nbsp;&nbsp;&nbsp;
-<a href="boardlist">게시판목록</a><br><br>
+<a href="${contextPath}/join">회원가입</a>&nbsp;&nbsp;&nbsp;
+<a href="${contextPath}/boardlist">게시판목록</a><br><br>
 </div>
 </body>
 </html>

@@ -88,4 +88,10 @@
 			select from file where num=#{num}
 		]]>	
 	</select>
+	
+	<delete id="deleteFile" parameterType="Integer">
+		<![CDATA[
+			delete from file where num=#{num}
+		]]>	
+	</delete>
 </mapper>
